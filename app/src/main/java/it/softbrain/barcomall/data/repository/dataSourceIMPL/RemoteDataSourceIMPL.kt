@@ -47,5 +47,9 @@ class RemoteDataSourceIMPL(private val webService: WebService) : RemoteDataSourc
         return webService.addToCart(apiKey, userId, productId, quantity)
     }
 
+    override suspend fun getCart(apiKey: String, userId: String): Response<JsonObject> {
+        return webService.getCart(apiKey,userId)
+    }
+
 
 }

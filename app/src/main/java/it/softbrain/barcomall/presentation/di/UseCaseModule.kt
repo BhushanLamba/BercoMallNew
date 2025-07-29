@@ -7,6 +7,7 @@ import dagger.hilt.components.SingletonComponent
 import it.softbrain.barcomall.domain.repository.Repository
 import it.softbrain.barcomall.domain.usecase.AddToCartUseCase
 import it.softbrain.barcomall.domain.usecase.GetBrandsUseCase
+import it.softbrain.barcomall.domain.usecase.GetCartUseCase
 import it.softbrain.barcomall.domain.usecase.GetCategoryUseCase
 import it.softbrain.barcomall.domain.usecase.GetHomePageUseCase
 import it.softbrain.barcomall.domain.usecase.GetProductDetailsUseCase
@@ -59,6 +60,12 @@ class UseCaseModule {
     @Provides
     fun addToCart(repository: Repository): AddToCartUseCase {
         return AddToCartUseCase(repository)
+    }
+
+    @Singleton
+    @Provides
+    fun getCart(repository: Repository): GetCartUseCase {
+        return GetCartUseCase(repository)
     }
 
 }

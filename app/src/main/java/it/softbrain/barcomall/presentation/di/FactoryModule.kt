@@ -7,11 +7,13 @@ import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import it.softbrain.barcomall.domain.usecase.AddToCartUseCase
 import it.softbrain.barcomall.domain.usecase.GetBrandsUseCase
+import it.softbrain.barcomall.domain.usecase.GetCartUseCase
 import it.softbrain.barcomall.domain.usecase.GetCategoryUseCase
 import it.softbrain.barcomall.domain.usecase.GetHomePageUseCase
 import it.softbrain.barcomall.domain.usecase.GetProductDetailsUseCase
 import it.softbrain.barcomall.domain.usecase.GetProductsUseCase
 import it.softbrain.barcomall.domain.usecase.LoginUserUseCase
+import it.softbrain.barcomall.presentation.viewModel.cart.CartViewModelFactory
 import it.softbrain.barcomall.presentation.viewModel.dashboard.DashboardViewModelFactory
 import it.softbrain.barcomall.presentation.viewModel.login.LoginViewModelFactory
 import it.softbrain.barcomall.presentation.viewModel.products.ProductsViewModelFactory
@@ -58,6 +60,14 @@ class FactoryModule {
             application, getProductsUseCase, getProductDetailsUseCase,
             addToCartUseCase
         )
+    }
+
+    @Singleton
+    @Provides
+    fun providesCartViewModelFactory(application: Application,
+                                     getCartUseCase: GetCartUseCase):CartViewModelFactory
+    {
+        return CartViewModelFactory(application,getCartUseCase)
     }
 
 }

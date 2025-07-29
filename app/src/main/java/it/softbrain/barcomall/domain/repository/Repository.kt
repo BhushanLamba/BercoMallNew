@@ -18,4 +18,6 @@ interface Repository
     suspend fun getHomePage(apiKey:String):Resource<JsonObject>
 
     suspend fun addToCart(apiKey:String,userId:String,productId: String,quantity:String):Resource<JsonObject>
+
+    suspend fun getCart(apiKey: String,userId: String):Resource<JsonObject>
 }

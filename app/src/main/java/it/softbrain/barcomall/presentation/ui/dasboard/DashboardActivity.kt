@@ -23,6 +23,7 @@ import it.softbrain.barcomall.data.util.SharedPref.IS_USER_LOGIN
 import it.softbrain.barcomall.databinding.ActivityDashboardBinding
 import it.softbrain.barcomall.databinding.NavigationDrawerBinding
 import it.softbrain.barcomall.presentation.ui.authentication.LoginActivity
+import it.softbrain.barcomall.presentation.ui.cart.CartFragment
 import it.softbrain.barcomall.presentation.viewModel.dashboard.DashboardViewModel
 import it.softbrain.barcomall.presentation.viewModel.dashboard.DashboardViewModelFactory
 import javax.inject.Inject
@@ -43,7 +44,7 @@ class DashboardActivity : AppCompatActivity() {
 
     private var isUserLogin: Boolean = false
 
-     lateinit var navDialogBinding:NavigationDrawerBinding
+    lateinit var navDialogBinding: NavigationDrawerBinding
     private lateinit var navDialog: Dialog
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -95,7 +96,7 @@ class DashboardActivity : AppCompatActivity() {
                 tvProfile.visibility = View.GONE
                 tvCart.visibility = View.GONE
 
-                imgDiscover.setColorFilter(ContextCompat.getColor(context, R.color.primaryColor))
+                imgDiscover.setColorFilter(ContextCompat.getColor(context, R.color.white))
                 imgFavourites.setColorFilter(ContextCompat.getColor(context, R.color.gray))
                 imgProfile.setColorFilter(ContextCompat.getColor(context, R.color.gray))
                 imgCart.setColorFilter(ContextCompat.getColor(context, R.color.gray))
@@ -109,7 +110,7 @@ class DashboardActivity : AppCompatActivity() {
                 tvProfile.visibility = View.GONE
                 tvCart.visibility = View.GONE
 
-                imgDiscover.setColorFilter(ContextCompat.getColor(context, R.color.primaryColor))
+                imgDiscover.setColorFilter(ContextCompat.getColor(context, R.color.white))
                 imgFavourites.setColorFilter(ContextCompat.getColor(context, R.color.gray))
                 imgProfile.setColorFilter(ContextCompat.getColor(context, R.color.gray))
                 imgCart.setColorFilter(ContextCompat.getColor(context, R.color.gray))
@@ -128,7 +129,7 @@ class DashboardActivity : AppCompatActivity() {
                     imgProfile.setColorFilter(
                         ContextCompat.getColor(
                             context,
-                            R.color.primaryColor
+                            R.color.white
                         )
                     )
                     imgFavourites.setColorFilter(ContextCompat.getColor(context, R.color.gray))
@@ -153,7 +154,7 @@ class DashboardActivity : AppCompatActivity() {
                     imgFavourites.setColorFilter(
                         ContextCompat.getColor(
                             context,
-                            R.color.primaryColor
+                            R.color.white
                         )
                     )
                     imgProfile.setColorFilter(ContextCompat.getColor(context, R.color.gray))
@@ -178,14 +179,14 @@ class DashboardActivity : AppCompatActivity() {
                     imgCart.setColorFilter(
                         ContextCompat.getColor(
                             context,
-                            R.color.primaryColor
+                            R.color.white
                         )
                     )
                     imgProfile.setColorFilter(ContextCompat.getColor(context, R.color.gray))
                     imgDiscover.setColorFilter(ContextCompat.getColor(context, R.color.gray))
                     imgFavourites.setColorFilter(ContextCompat.getColor(context, R.color.gray))
 
-                    Toast.makeText(context, "Cart", Toast.LENGTH_LONG).show()
+                    replaceFragment(CartFragment(), Bundle())
                 } else {
                     startActivity(Intent(activity, LoginActivity::class.java))
                     finish()

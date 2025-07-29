@@ -50,6 +50,10 @@ class RepositoryIMPL(private val remoteDataSource: RemoteDataSource) :
         return responseToResource(remoteDataSource.addToCart(apiKey, userId, productId, quantity))
     }
 
+    override suspend fun getCart(apiKey: String, userId: String): Resource<JsonObject> {
+        return responseToResource(remoteDataSource.getCart(apiKey, userId))
+    }
+
     private fun responseToResource(response: Response<JsonObject>): Resource<JsonObject> {
 
         if (response.isSuccessful) {

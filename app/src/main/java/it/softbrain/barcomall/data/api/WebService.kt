@@ -77,4 +77,11 @@ interface WebService {
         @Field("ProductId") ProductId: String,
         @Field("Qnt") Qnt: String
     ): Response<JsonObject>
+
+    @POST("ViewCart")
+    @FormUrlEncoded
+    suspend fun getCart(
+        @Field("ApiKey") ApiKey: String,
+        @Field("UserId") UserId: String
+    ): Response<JsonObject>
 }

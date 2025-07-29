@@ -22,4 +22,6 @@ interface RemoteDataSource {
         productId: String,
         quantity: String
     ): Response<JsonObject>
+
+    suspend fun getCart(apiKey: String,userId: String):Response<JsonObject>
 }
