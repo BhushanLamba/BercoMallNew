@@ -1,23 +1,23 @@
 package it.softbrain.barcomall.presentation.ui.products
 
 import android.os.Bundle
+import android.service.autofill.Validators.or
+import android.text.Editable
+import android.text.TextWatcher
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import dagger.hilt.android.AndroidEntryPoint
-import it.softbrain.barcomall.R
-import it.softbrain.barcomall.data.models.Categories
 import it.softbrain.barcomall.data.models.Products
 import it.softbrain.barcomall.data.util.Resource
 import it.softbrain.barcomall.databinding.FragmentProductsBinding
 import it.softbrain.barcomall.presentation.adapter.ProductsAdapter
-import it.softbrain.barcomall.presentation.ui.MainActivity
 import it.softbrain.barcomall.presentation.ui.dasboard.DashboardActivity
+import it.softbrain.barcomall.presentation.ui.filter.FilterFragment
 import it.softbrain.barcomall.presentation.viewModel.products.ProductsViewModel
 import it.softbrain.barcomall.presentation.viewModel.products.ProductsViewModelFactory
 import org.json.JSONObject
@@ -35,6 +35,10 @@ class ProductsFragment : Fragment() {
 
     private lateinit var categoryId: String
 
+    private val dataList = ArrayList<Products>()
+    private lateinit var adapter: ProductsAdapter
+
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -49,7 +53,38 @@ class ProductsFragment : Fragment() {
         productsViewModel.getProducts(categoryId, "Berco001")
 
         setUpObservers()
+
+        binding.etSearch.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                searchData(s.toString())
+            }
+
+            override fun afterTextChanged(s: Editable?) {
+
+            }
+
+        })
+
         return binding.root;
+    }
+
+    private fun searchData(query: String) {
+        val filterDataList = ArrayList<Products>()
+        for (position in 0 until dataList.size) {
+            val data = dataList[position]
+
+            if (data.productName.lowercase().contains(query.lowercase())) {
+                filterDataList.add(data)
+            }
+            if (filterDataList.isNotEmpty()) {
+                adapter.filterData(filterDataList)
+            }
+
+        }
     }
 
     private fun setUpObservers() {
@@ -70,7 +105,6 @@ class ProductsFragment : Fragment() {
                     val responseObject = JSONObject(response.toString())
                     val statusCode = responseObject.getString("Status_Code").toString()
 
-                    val dataList = ArrayList<Products>()
 
                     if (statusCode.equals("1", true)) {
                         val dataArray = responseObject.getJSONArray("Data")
@@ -79,6 +113,7 @@ class ProductsFragment : Fragment() {
                         for (i in 0 until dataArray.length()) {
                             val dataObject = dataArray.getJSONObject(i)
                             val id = dataObject.getString("ProductId")
+                            val brand = dataObject.getString("BrandName")
                             var name = dataObject.getString("CategoryName")
                             var picture = dataObject.getString("Picture")
                             picture = picture.replaceFirst(".", "")
@@ -88,6 +123,9 @@ class ProductsFragment : Fragment() {
                             val discount = dataObject.getString("DisAmount")
                             val discountPercentage = dataObject.getString("Discountper")
                             val price = dataObject.getString("Price")
+                            val productType = dataObject.getString("Product_Type")
+                            val size = dataObject.getString("Size")
+                            val energyRating = dataObject.getString("EnergyRating")
 
                             if (name.contains(" ")) {
                                 name = name.replaceFirst(" ", "\n")
@@ -105,12 +143,13 @@ class ProductsFragment : Fragment() {
                                     price,
                                     picture,
                                     status,
-                                    discountPercentage
+                                    discountPercentage,
+                                    brand, productType, size, energyRating
                                 )
                             )
                         }
 
-                        val adapter = ProductsAdapter(dataList)
+                        adapter = ProductsAdapter(dataList)
                         { product ->
                             val productId = product.productId
                             val bundle = Bundle()
@@ -129,6 +168,25 @@ class ProductsFragment : Fragment() {
                         binding.apply {
                             recycler.adapter = adapter
                             recycler.layoutManager = gridLayoutManager
+
+
+                            btnFilter.setOnClickListener {
+                                val bundle = Bundle()
+                                bundle.putString("dataArray", dataArray.toString())
+
+
+                                (activity as DashboardActivity).addFragment(
+                                    FilterFragment(applyFilter = { brandsList, technologyTypeList, capacitySizeList, energyRatingList ->
+                                        filterData(
+                                            brandsList,
+                                            technologyTypeList,
+                                            capacitySizeList,
+                                            energyRatingList
+                                        )
+                                    }),
+                                    bundle
+                                )
+                            }
                         }
 
 
@@ -138,6 +196,26 @@ class ProductsFragment : Fragment() {
                 }
             }
         }
+    }
+    private fun filterData(
+        brandsList: List<String>,
+        technologyTypeList: List<String>,
+        capacitySizeList: List<String>,
+        energyRatingList: List<String>
+    ) {
+
+
+        val filterDataList = dataList.filter { dataItem ->
+            (brandsList.isEmpty() || brandsList.contains(dataItem.brand)) &&
+                    (technologyTypeList.isEmpty() || technologyTypeList.contains(dataItem.productType)) &&
+                    (capacitySizeList.isEmpty() || capacitySizeList.contains(dataItem.size)) &&
+                    (energyRatingList.isEmpty() || energyRatingList.contains(dataItem.energyRating))
+        }
+
+
+        adapter.filterData(filterDataList as ArrayList)
+
+
     }
 
 }

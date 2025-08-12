@@ -77,8 +77,8 @@ class DashboardActivity : AppCompatActivity() {
         binding.apply {
 
             navDialog.setContentView(navDialogBinding.root)
-            //dialog.window.setWindowAnimations()
-            navDialog.window?.setBackgroundDrawableResource(R.drawable.linear_gradient)
+            navDialog.window?.setWindowAnimations(R.style.Nav_menu_dialog)
+            navDialog.window?.setBackgroundDrawableResource(R.drawable.right_round_corner)
             navDialog.window?.setGravity(Gravity.START or Gravity.TOP)
             navDialog.window?.setLayout(
                 (resources.displayMetrics.widthPixels * 0.75).toInt(),
@@ -203,6 +203,29 @@ class DashboardActivity : AppCompatActivity() {
         val fragmentTransaction = fragmentManager.beginTransaction()
         fragmentTransaction.replace(R.id.main_fram, fragment)
         fragmentTransaction.addToBackStack(fragment.id.toString())
+        fragmentTransaction.commit()
+
+    }
+
+    fun addFragment(fragment: Fragment, bundle: Bundle) {
+
+        fragment.arguments = bundle
+        val fragmentManager = supportFragmentManager
+
+        val currentFragment = fragmentManager.primaryNavigationFragment
+
+        val fragmentTransaction = fragmentManager.beginTransaction()
+
+        fragmentTransaction.add(R.id.main_fram, fragment)
+
+        if (currentFragment != null) {
+            fragmentTransaction.hide(currentFragment)
+        }
+        fragmentTransaction.show(fragment)
+        fragmentTransaction.setPrimaryNavigationFragment(fragment)
+
+        fragmentTransaction.addToBackStack(fragment.id.toString())
+
         fragmentTransaction.commit()
 
     }

@@ -11,4 +11,9 @@
         <item name="fullscreenBackgroundColor">@color/light_blue_900</item>
         <item name="fullscreenTextColor">@color/light_blue_A400</item>
     </style>
+
+    <style name="Nav_menu_dialog" >
+        <item name="android:windowExitAnimation">@anim/origin_to_start</item>
+        <item name="android:windowEnterAnimation">@anim/start_to_origin</item>
+    </style>
 </resources>

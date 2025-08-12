@@ -10,10 +10,17 @@ import it.softbrain.barcomall.databinding.HotDealsProductsBinding
 import it.softbrain.barcomall.databinding.ProductsItemBinding
 
 class ProductsAdapter(
-    private val dataList: ArrayList<Products>,
+    private var dataList: ArrayList<Products>,
     private val viewType: String = "Products",
     private val onItemClick: (Products) -> Unit
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+
+
+    public fun filterData(filterList:ArrayList<Products>)
+    {
+        dataList=filterList
+        notifyDataSetChanged()
+    }
 
 
     class ProductViewHolder(private val binding: ProductsItemBinding) :

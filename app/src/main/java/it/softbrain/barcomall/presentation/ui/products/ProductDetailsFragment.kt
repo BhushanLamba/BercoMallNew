@@ -12,6 +12,8 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModelProvider
 import dagger.hilt.android.AndroidEntryPoint
 import it.softbrain.barcomall.R
@@ -40,6 +42,8 @@ class ProductDetailsFragment : Fragment() {
     private lateinit var context: Context
     private lateinit var activity: Activity
     private lateinit var picture: String
+    private var quantity: Int = 1
+    private var quantityData= MutableLiveData<Int>()
 
 
     override fun onCreateView(
@@ -53,6 +57,7 @@ class ProductDetailsFragment : Fragment() {
             ViewModelProvider(this, productsViewModelFactory)[ProductsViewModel::class]
 
         productId = arguments?.getString("productId").toString()
+        quantityData.value = quantity
 
         productsViewModel.getProductDetails(productId, "Berco001")
         setUpObserver()
@@ -72,7 +77,27 @@ class ProductDetailsFragment : Fragment() {
             }
 
             btnAddToCart.setOnClickListener {
-                productsViewModel.addToCart("Berco001", "1", productId, "1")
+                productsViewModel.addToCart("Berco001", "1", productId, quantity.toString())
+            }
+
+            incCard.setOnClickListener {
+                if (quantity < 10) {
+                    quantity++
+                    quantityData.value = quantity
+                }
+            }
+
+            decCard.setOnClickListener {
+                if (quantity > 1) {
+                    quantity--
+                    quantityData.value = quantity
+                }
+            }
+
+            quantityData.observe(viewLifecycleOwner)
+            {
+                val quantityStr = quantity.toString()
+                etQuantity.setText(quantityStr)
             }
         }
     }

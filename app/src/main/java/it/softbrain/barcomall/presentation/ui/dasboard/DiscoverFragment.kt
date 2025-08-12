@@ -135,7 +135,17 @@ class DiscoverFragment : Fragment() {
 
                         val navMenuAdapter = CategoryAdapter(dataList,"NavMenu")
                         {
+                                category ->
 
+                            val categoryId = category.id
+
+                            val bundle = Bundle()
+                            bundle.putString("categoryId", categoryId)
+
+                            (activity as DashboardActivity).replaceFragment(
+                                ProductsFragment(),
+                                bundle
+                            )
                         }
 
                         val gridLayoutManager = GridLayoutManager(context, 2, LinearLayoutManager.HORIZONTAL, false)
