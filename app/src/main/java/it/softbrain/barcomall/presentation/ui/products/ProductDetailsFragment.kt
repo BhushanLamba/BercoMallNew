@@ -259,6 +259,8 @@ class ProductDetailsFragment : Fragment() {
 
     //Lamba Branch
 
+    //Bhushan Branch
+
     private fun setUpDetailWebView(description: String) {
         val htmlStringFromApi =
             """<html><body>$description</body></html>"""  // wrap it in full HTML
